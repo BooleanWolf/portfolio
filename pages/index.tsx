@@ -1,86 +1,124 @@
-import type { NextPage } from 'next'
+import type { GetStaticProps, NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
+import About from '../components/About'
+import Achievements from '../components/Achievements'
+import AllProjects from '../components/AllProjects'
+import Experience from '../components/Experience'
+import Header from '../components/Header'
+import Hero from '../components/Hero'
+import Projects from '../components/Projects'
+import Research from '../components/Research'
+import Skills from '../components/Skills'
+import { Achievement, Experiences, PageInfo, Project, Skill , Social} from '../typing'
+import { fetchAchievements } from '../utils/fetchAchievements'
+import { fetchExperiences } from '../utils/fetchExperience'
+import { fetchFeatured } from '../utils/fetchFeatured'
+import { fetchPageInfo } from '../utils/fetchPageInfo'
+import { fetchProjects } from '../utils/fetchProjects'
+import { fetchSkills } from '../utils/fetchSkills'
+import { fetchSocials } from '../utils/fetchSocials'
 
-const Home: NextPage = () => {
+
+type Props = {
+  pageInfo: PageInfo;
+  experiences: Experiences[];
+  skills: Skill[];
+  projects: Project[];
+  socials: Social[]; 
+  featured: Project[];
+  prizes: Achievement[];
+}
+
+const Home = ({pageInfo, experiences, skills, projects, socials, featured, prizes}: Props) => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <div className='bg-[rgb(36,36,36)] text-white h-screen snap-y snap-mandatory overflow-scroll z-0 scrollbar scrollbar-track-gray-400/20 scrollbar-thumb-[#F7AB0A]/80'>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
+     
+      <Header socials={socials}/>
 
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
+      
+      <section id="hero" className='snap-start'>
+        <Hero pageInfo={pageInfo}/>
+      </section>
 
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
+      <section id="about" className='snap-center'>
+        <About pageInfo={pageInfo}/>
+      </section>
+      
 
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
+      <section id="experience" className='snap-center'>
+        <Experience experiences={experiences}/>
+      </section>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
+    
+      <section id="skills" className='snap-start'>
+        <Skills skills={skills}/>
+      </section>
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+    
 
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </a>
-      </footer>
+      <section id="projects" className='snap-center'>
+        <Projects projects={featured}/>
+      </section>
+
+      <section id="allprojects" className='snap-start'>
+        <AllProjects projects={projects}/>
+      </section>
+
+      <section id="research" className='snap-start'>
+        <Research/>
+      </section>
+
+      <section id="achievements" className='snap-start'>
+        <Achievements prizes={prizes}/>
+      </section>
+
+      {/*Contact me*/}
+
+      <Link href="#hero">
+        <footer className='sticky bottom-5 w-full cursor-pointer'>
+          <div className='flex items-center justify-center'>
+            <img
+              src="https://scontent.fdac24-2.fna.fbcdn.net/v/t39.30808-6/326023190_733425464661141_791998025936142238_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeHLf1PU932f5PtDaSVXfJIDva0BJ97zz_29rQEn3vPP_bxIPNH59d-xXMlEUnqgESu_6QB2mYoeZOXdkBF_plg-&_nc_ohc=4sW_M1Ryx2IAX9eQ0ZP&_nc_ht=scontent.fdac24-2.fna&oh=00_AfBs4hoTELPpHaElYfT_zKBqjreZDaqgFTc9CCsPa5HM6A&oe=6409A3C7"
+              alt=""
+              className='h-10 w-10 rounded-full filter grayscale hover:grayscale-0 cursor-pointer'
+              />
+          </div>
+        </footer>
+      </Link>
+      
     </div>
   )
 }
 
-export default Home
+export default Home;
+
+export const getStaticProps: GetStaticProps<Props>= async () => {
+  const pageInfo: PageInfo = await fetchPageInfo();
+  const experiences: Experiences[] = await fetchExperiences();
+  const skills: Skill[] = await fetchSkills();
+  const projects: Project[] = await fetchProjects();
+  const socials: Social[] = await fetchSocials();
+  const featured: Project[] = await fetchFeatured();
+  const prizes: Achievement[] = await fetchAchievements();
+
+  return {
+    props: {
+      pageInfo,
+      experiences,
+      skills,
+      projects,
+      socials,
+      featured,
+      prizes
+    },
+
+    revalidate: 10,
+  }
+}
